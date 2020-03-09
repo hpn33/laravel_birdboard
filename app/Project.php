@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\User;
+use App\Task;
 
 
 class Project extends Model
@@ -11,10 +12,17 @@ class Project extends Model
     protected $fillable = ['title', 'description'];
 
 
-    public function path()
+    public function path($extend = '')
     {
 
-    	return '/projects/' . $this->id;
+        $path = '/projects/' . $this->id;
+
+        if ($extend != '')
+        {
+            $path .= '/' . $extend;
+        }
+
+    	return $path;
 
     }
 
@@ -23,6 +31,22 @@ class Project extends Model
     {
 
     	return $this->belongsTo(User::class);
+
+    }
+
+
+    public function tasks()
+    {
+
+    	return $this->hasMany(Task::class);
+
+    }
+
+
+	public function addTask($body)
+    {
+
+    	return $this->tasks()->create(compact('body'));
 
     }
 
