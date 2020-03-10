@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Project;
 
 
-class ProjectTaskController extends Controller
+class ProjectTasksController extends Controller
 {
     public function store(Project $project)
     {
