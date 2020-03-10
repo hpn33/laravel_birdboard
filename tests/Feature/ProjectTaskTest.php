@@ -69,7 +69,6 @@ class ProjectTaskTest extends TestCase
         );
 
         $attributes = factory('App\Task')->raw([
-            // 'project_id' => $project->id,
             'body' => ''
         ]);
 
