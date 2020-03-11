@@ -37,6 +37,7 @@ class ProjectsController extends Controller
 
     public function store()
     {
+        // dd($project);
 
         $attributes = request()->validate([
             'title' => 'required',
@@ -44,9 +45,6 @@ class ProjectsController extends Controller
         ]);
 
         $auuributes['owner_id'] = auth()->id();
-
-
-    	// Project::create($attributes);
 
         $project = auth()->user()->projects()->create($attributes);
 

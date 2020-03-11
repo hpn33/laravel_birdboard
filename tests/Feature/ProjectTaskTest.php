@@ -23,7 +23,7 @@ class ProjectTaskTest extends TestCase
 
 
     /** @test */
-    public function adding_a_task_if_you_are_not_the_project_owner()
+    public function only_the_owner_of_a_project_may_add_tasks()
     {
 
         $this->signIn();
@@ -36,6 +36,25 @@ class ProjectTaskTest extends TestCase
             ->assertStatus(403);
 
         $this->assertDatabaseMissing('tasks', $body);
+
+    }
+
+
+    /** @test */
+    public function only_the_owner_of_a_project_may_update_a_task()
+    {
+
+        $this->signIn();
+
+        $project = factory('App\Project')->create();
+        $task = $project->addTask('task Task');
+
+        $newBody = ['body' => 'some text is here.'];
+
+        $this->patch($task->path(), $newBody)
+            ->assertStatus(403);
+
+        $this->assertDatabaseMissing('tasks', $newBody);
 
     }
 
@@ -76,5 +95,30 @@ class ProjectTaskTest extends TestCase
             ->assertSessionHasErrors('body');
     }
 
+
+    /** @test */
+    public function a_task_can_be_updated()
+    {
+
+        $this->signIn();
+
+        $project = auth()->user()->projects()->create(
+            factory('App\Project')->raw()
+        );
+
+
+        $newBody = [
+            'body' => 'changed',
+            'completed' => true
+        ];
+
+
+        $task = $project->addTask('some text is here.');
+
+        $this->patch($task->path(), $newBody);
+
+        $this->assertDatabaseHas('tasks', $newBody);
+
+    }
 
 }
