@@ -30,7 +30,11 @@
                     <a class="navbar-brand" href="{{ url('/') }}">
                         {{ config('app.name', 'Laravel') }}
                     </a>
-
+                    
+                    @guest
+                    @else
+                        <a class="nav-link" href="/projects">Project</a>
+                    @endguest
                     <div >
                         
 
