@@ -9,7 +9,7 @@
 				<a href="/projects" class="text-gray text-sm font-normal no-underline">My Projects</a> / {{ $project->title }}
 			</p>
 
-			<a href="/projects/create" class="button">New Project</a>	
+			<a href="{{ $project->path('edit') }}" class="button">Edit Project</a>	
 		</div>
 		
 	</header>
@@ -54,9 +54,7 @@
 							name="notes" 
 							class="card w-full mb-4" 
 							style="min-width: 200px" 
-							placeholder="Anything special that you want to make a note of?">
-							{{ $project->notes }}
-						</textarea>
+							placeholder="Anything special that you want to make a note of?">{{ $project->notes }}</textarea>
 						<button type="submit" class="button">Save</button>
 					</form>
 				</div>
