@@ -2,10 +2,9 @@
 	<ul class="text-xs list-rest">
 		
 		@foreach($project->activity as $activity)
-
 			<li class="{{ $loop->last ? '' : 'mb-1'}}">
-				@include('project.activity.{$activity->descriptoin}')
-				<span class="text-gray">{{ $activity->create_at->diffForHumans(null, true) }}</span>
+				@include("projects.activity.{$activity->description}")
+				<span class="text-gray-500">{{ $activity->created_at->diffForHumans(null, true) }}</span>
 			</li>
 
 		@endforeach
