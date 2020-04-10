@@ -5,10 +5,14 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\User;
 use App\Task;
+use App\TriggersActivity;
 
 
 class Project extends Model
 {
+
+    use TriggersActivity;
+
     protected $fillable = ['title', 'description', 'notes'];
 
 

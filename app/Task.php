@@ -3,10 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\TriggersActivity;
 
 class Task extends Model
 {
-
+    use TriggersActivity;
 
     protected $guarded = [];
 
