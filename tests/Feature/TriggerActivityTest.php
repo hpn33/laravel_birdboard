@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Facades\Tests\Setup\ProjectFactory;
 
-class ActivityFeedTest extends TestCase
+class TriggerActivityTest extends TestCase
 {
 
     use RefreshDatabase;
@@ -20,6 +20,12 @@ class ActivityFeedTest extends TestCase
 
         $this->assertCount(1, $project->activity);
         $this->assertEquals('created', $project->activity[0]->description);
+
+        tap($project->activity->last(), function($activity) {
+            $this->assertEquals('created', $activity->description);
+
+            $this->assertNull($activity->changes);
+        });
     }
 
 
@@ -28,11 +34,23 @@ class ActivityFeedTest extends TestCase
     {
         
         $project = ProjectFactory::create();
+        $orginalTitle = $project->title;
 
         $project->update(['title' => 'Changed']);
 
         $this->assertCount(2, $project->activity);
-        $this->assertEquals('updated', $project->activity->last()->description);
+
+        tap($project->activity->last(), function($activity) use ($orginalTitle) {
+            $this->assertEquals('updated', $activity->description);
+
+
+            $expected = [
+                'before' => ['title' => $orginalTitle],
+                'after' => ['title' => 'Changed']
+            ];
+
+            $this->assertEquals($expected, $activity->changes);
+        });
     }
 
 
@@ -69,7 +87,7 @@ class ActivityFeedTest extends TestCase
         $this->assertCount(3, $project->activity);
         $this->assertEquals('completed_task', $project->activity->last()->description);
 
-         tap($project->activity->last(), function($activity) {
+        tap($project->activity->last(), function($activity) {
             $this->assertEquals('completed_task', $activity->description);
             $this->assertInstanceOf('App\Task', $activity->subject);
         });
