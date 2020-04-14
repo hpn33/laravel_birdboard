@@ -1,5 +1,5 @@
 @if(count($activity->changes['after']) == 1)
-	{{ $activity->owner->name }} updated {{ key($activity->changes['after']) }} of the project
+	{{ $activity->user->name }} updated {{ key($activity->changes['after']) }} of the project
 @else
-	{{ $activity->owner->name }} updated the project
+	{{ $activity->user->name }} updated the project
 @endif
