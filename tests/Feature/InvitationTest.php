@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Facades\Tests\Setup\ProjectFactory;
+use Illuminate\Support\Facades\Session;
 
 class InvitationTest extends TestCase
 {
@@ -18,10 +19,21 @@ class InvitationTest extends TestCase
     public function non_owners_may_not_invite_users()
     {
 
-        $this->actingAs(factory('App\User')->create())
-        	->post(ProjectFactory::create()->path('invitations'))
-        	->assertStatus(403);
+        $project = ProjectFactory::create();
+        $user = factory('App\User')->create();
+
+        $assertInvitationForbidden = function() use ($user, $project) {
+            $this->actingAs($user)
+                ->post($project->path('invitations'))
+                ->assertStatus(403);
+        };
     
+        $assertInvitationForbidden();
+
+        $project->invite($user);
+
+        $assertInvitationForbidden();
+
     }
 
 
@@ -48,11 +60,12 @@ class InvitationTest extends TestCase
 
         $this->actingAs($project->owner)
         	->post($project->path('invitations'), [
-        		'email' => 'notauser@example.com'
+                'email' => 'notauser@example.com'
         	])
         	->assertSessionHasErrors([
-        		'email' => 'The user you are inviting must have a Birdboard account.'
-        	]);
+                'email' => 'The user you are inviting must have a Birdboard account.'
+        	], null, 'invitations');
+
 
 
     }
