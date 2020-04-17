@@ -22,7 +22,7 @@
 
         created() {
             this.selectedTheme = localStorage.getItem('theme') || 'theme-light';
-        },
+        },  
 
         watch: {
         	selectedTheme() {
